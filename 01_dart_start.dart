@@ -41,6 +41,7 @@ int fibonacci(int n) {
   if (n == 0 || n == 1) return n;
   return fibonacci(n - 1) + fibonacci(n - 2);
 }
+
 //类  https://dart.cn/samples#classes
 class Spacecraft {
   String name;
@@ -59,20 +60,27 @@ class Spacecraft {
     //type promotion doesn't work on getters.
     var launchDate = this.launchDate;
     if (launchDate != null) {
-      int years=DateTime.now().difference(launchDate).inDays~/365;
+      int years = DateTime.now().difference(launchDate).inDays ~/ 365;
       print('Launched: $launchYear ($years years ago)');
-    }else{
+    } else {
       print('Unlaunched');
     }
   }
+}
+
+//扩展类 https://dart.cn/samples#inheritance
+class Orbiter extends Spacecraft {
+  double altitude;
+  Orbiter(String name, DateTime launchDate, this.altitude)
+      : super(name, launchDate);
 }
 
 void main(List<String> args) {
   //variables(); //变量
   //print(fibonacci(20)); //函数,斐波那契函数
   var voyager = Spacecraft('Voyager I', DateTime(1977, 9, 5));
-voyager.describe();
+  voyager.describe();
 
-var voyager3 = Spacecraft.unlaunched('Voyager III');
-voyager3.describe();
+  var voyager3 = Spacecraft.unlaunched('Voyager III');
+  voyager3.describe();
 }
