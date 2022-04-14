@@ -423,7 +423,7 @@ void main(List<String> args) {
   // 数字、集合、字符串等
   dartcore_numbers_numbers_collections_strings_and_more();
 
-  // 集合
+  // 集合111
   collections();
 
   // 时间和日期
