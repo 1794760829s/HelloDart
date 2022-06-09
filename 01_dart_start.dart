@@ -94,7 +94,7 @@ class PilotedCraft extends Spacecraft with Piloted {
 void main(List<String> args) {
   variables(); //变量
   print(fibonacci(20)); //函数,斐波那契函数
-  print("类：")
+  print("类：");
   var voyager = Spacecraft('Voyager I', DateTime(1977, 9, 5));
   voyager.describe();
   var voyage2 = Spacecraft.unlaunched('Voyager III');
