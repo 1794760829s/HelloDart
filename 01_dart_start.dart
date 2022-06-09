@@ -91,18 +91,65 @@ class PilotedCraft extends Spacecraft with Piloted {
   PilotedCraft(String name, DateTime launchDate) : super(name, launchDate);
 }
 
+//抽象类https://dart.cn/samples#interfaces-and-abstract-classes
+abstract class Describable {
+  void describe();
+
+  void describeWithEmphasis();
+}
+
+class Des implements Describable {
+  var str = '抽象类';
+  @override
+  void describe() {
+    print(str);
+  }
+
+  @override
+  void describeWithEmphasis() {
+    print('=========');
+    describe();
+    print('=========');
+  }
+}
+
+//异步与异常 https://dart.cn/samples#async;
+//          https:dart.cn/samples#exceptions
+Future<void> createDescriptions(Iterable<String> objects) async {
+  for (final object in objects) {
+    try {
+      var file = File('$object.txt');
+      if (await file.exists()) {
+        var modified = await file.lastModified();
+        print('File for $object already exists. It was modified on $modified.');
+        continue;
+      }
+      await file.create();
+      await file.writeAsString('Start describing $object in this file.');
+    } on IOException catch (e) {
+      print('Cannot create description for $object: $e');
+    }
+  }
+}
+
 void main(List<String> args) {
+  print("变量：");
   variables(); //变量
-  print(fibonacci(20)); //函数,斐波那契函数
+
+  print("斐波那契数列的第20个数：${fibonacci(20)}\n"); //函数,斐波那契函数
+
   print("类：");
   var voyager = Spacecraft('Voyager I', DateTime(1977, 9, 5));
   voyager.describe();
   var voyage2 = Spacecraft.unlaunched('Voyager III');
   voyage2.describe();
-
   var voyager3 = Orbiter('Voyager III', DateTime(1980, 10, 12), 3);
   voyager3.describe();
   var voyager4 = PilotedCraft('Voyager Ⅳ', DateTime(1985, 5, 14));
   voyager4.describe();
   voyager4.describeCrew();
+
+  Des().describeWithEmphasis();
+  Iterable<String> test=['01_test'];
+  createDescriptions(test);
 }
