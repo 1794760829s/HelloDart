@@ -1,81 +1,71 @@
 import 'dart:math';
-
+import 'dart:convert';
 // 数字、集合、字符串等（https://dart.cn/guides/libraries/library-tour#dartcore---numbers-collections-strings-and-more）
 void dartcore_numbers_numbers_collections_strings_and_more() {
-  print('\n');
-  print('#' * 40);
-  print('数字、集合、字符串等');
-  print('#' * 40);
-
   assert(int.parse('42') == 42);
   assert(int.parse('0x42') == 66);
   assert(double.parse('0.50') == 0.5);
-
+  assert(num.parse('42') is int);
+  assert(num.parse('0x42') is int);
+  assert(num.parse('0.50') is double);
   assert(int.parse('42', radix: 16) == 66);
 
+  //使用 toString() 方法将整型或双精度浮点类型转换为字符串类型
   // Convert an int to a string.
   assert(42.toString() == '42');
-
   // Convert a double to a string.
   assert(123.456.toString() == '123.456');
-
   // Specify the number of digits after the decimal.
   assert(123.456.toStringAsFixed(2) == '123.46');
-
   // Specify the number of significant figures.
   assert(123.456.toStringAsPrecision(2) == '1.2e+2');
   assert(double.parse('1.2e+2') == 120.0);
 
+  //在字符串内查找特定字符串的位置，以及检查字符串是否以特定字符串作为开头或结尾
   // Check whether a string contains another string.
   assert('Never odd or even'.contains('odd'));
-
   // Does a string start with another string?
   assert('Never odd or even'.startsWith('Never'));
-
   // Does a string end with another string?
   assert('Never odd or even'.endsWith('even'));
-
   // Find the location of a string inside a string.
   assert('Never odd or even'.indexOf('odd') == 6);
 
+//从字符串中提取数据
   // Grab a substring.
   assert('Never odd or even'.substring(6, 9) == 'odd');
-
   // Split a string using a string pattern.
   var parts = 'progressive web apps'.split(' ');
   assert(parts.length == 3);
   assert(parts[0] == 'progressive');
-
   // Get a UTF-16 code unit (as a string) by index.
   assert('Never odd or even'[0] == 'N');
-
   // Use split() with an empty string parameter to get
   // a list of all characters (as Strings); good for
   // iterating.
   for (final char in 'hello'.split('')) {
     print(char);
   }
-
   // Get all the UTF-16 code units in the string.
   // UTF 编码（https://www.jianshu.com/p/ba7fb4a651c7）
   var codeUnitList = 'Never odd or even'.codeUnits.toList();
   assert(codeUnitList[0] == 78);
 
+//首字母大小写转换
   // Convert to uppercase.
   assert('web apps'.toUpperCase() == 'WEB APPS');
-
   // Convert to lowercase.
   assert('WEB APPS'.toLowerCase() == 'web apps');
 
+//Trimming 和空字符串
   // Trim a string.
   assert('  hello  '.trim() == 'hello');
-
 // Check whether a string is empty.
   assert(''.isEmpty);
-
 // Strings with only white space are not empty.
   assert('  '.isNotEmpty);
 
+//替换部分字符串
   var greetingTemplate = 'Hello, NAME!';
   var greeting = greetingTemplate.replaceAll(RegExp('NAME'), 'Bob');
 
@@ -93,12 +83,11 @@ void dartcore_numbers_numbers_collections_strings_and_more() {
 
   assert(fullString == 'Use a StringBuffer for efficient string creation.');
 
+//构建一个字符串
   // Here's a regular expression for one or more digits.
   var numbers = RegExp(r'\d+');
-
   var allCharacters = 'llamas live fifteen to twenty years';
   var someDigits = 'llamas live 15 to 20 years';
-
 // contains() can use a regular expression.
   assert(!allCharacters.contains(numbers));
   assert(someDigits.contains(numbers));
@@ -314,7 +303,31 @@ void collections() {
 }
 
 // URIs (https://dart.cn/guides/libraries/library-tour#uris)
-// TODO: 暂缓
+void URIs() {
+
+  var uri = 'https://example.org/api?foo=some message';
+
+  var encoded = Uri.encodeFull(uri);
+  assert(encoded == 'https://example.org/api?foo=some%20message');
+  var decoded = Uri.decodeFull(encoded);
+  assert(uri == decoded);
+  decoded = Uri.decodeComponent(encoded);
+  assert(uri == decoded);
+  print("uri=${uri.toString()}");
+
+  var uri1 = Uri.parse('https://example.org:8080/foo/bar#frag');
+  assert(uri1.scheme == 'https');
+  assert(uri1.host == 'example.org');
+  assert(uri1.path == '/foo/bar');
+  assert(uri1.fragment == 'frag');
+  assert(uri1.origin == 'https://example.org:8080');
+  print("uri1=${uri1.toString()}");
+
+  var uri2 = Uri(
+      scheme: 'https', host: 'example.org', path: '/foo/bar', fragment: 'frag');
+  assert(uri2.toString() == 'https://example.org/foo/bar#frag');
+  print("uri2=${uri2.toString()}");
+}
 
 // 时间和日期 （https://dart.cn/guides/libraries/library-tour#dates-and-times）
 void dates_and_times() {
@@ -367,7 +380,52 @@ void dates_and_times() {
 }
 
 // 工具类 （https://dart.cn/guides/libraries/library-tour#utility-classes）
-// TODO: 暂缓
+//比较对象
+class Line implements Comparable<Line> {
+  final int length;
+  const Line(this.length);
+
+  @override
+  int compareTo(Line other) => length - other.length;
+}
+//Implementing map keys
+class Person {
+  final String firstName, lastName;
+
+  Person(this.firstName, this.lastName);
+
+  // Override hashCode using the static hashing methods
+  // provided by the `Object` class.
+  @override
+  int get hashCode => Object.hash(firstName, lastName);
+
+  // You should generally implement operator `==` if you
+  // override `hashCode`.
+  @override
+  bool operator ==(dynamic other) {
+    return other is Person &&
+        other.firstName == firstName &&
+        other.lastName == lastName;
+  }
+}
+//迭代
+class Process {
+  // Represents a process...
+}
+
+class ProcessIterator implements Iterator<Process> {
+  @override
+  Process get current => ...
+  @override
+  bool moveNext() => ...
+}
+
+// A mythical class that lets you iterate through all
+// processes. Extends a subclass of [Iterable].
+class Processes extends IterableBase<Process> {
+  @override
+  final Iterator<Process> iterator = ProcessIterator();
+}
 
 // 异常 (https://dart.cn/guides/libraries/library-tour#exceptions)
 // TODO: 暂缓
@@ -412,7 +470,68 @@ void math_and_random() {
 
 // 编解码JSON，UTF-8等 (https://dart.cn/guides/libraries/library-tour#dartconvert---decoding-and-encoding-json-utf-8-and-more)
 // TODO: 自学
+void Encoding_decoding(){
+//使用 jsonDecode() 解码 JSON 编码的字符串为 Dart 对象：
+// NOTE: Be sure to use double quotes ("),
+// not single quotes ('), inside the JSON string.
+// This string is JSON, not Dart.
+var jsonString = '''
+  [
+    {"score": 40},
+    {"score": 80}
+  ]
+''';
+var scores = jsonDecode(jsonString);
+assert(scores is List);
+var firstScore = scores[0];
+assert(firstScore is Map);
+assert(firstScore['score'] == 40);
 
+//使用 jsonEncode() 编码 Dart 对象为 JSON 格式的字符串：
+scores = [
+  {'score': 40},
+  {'score': 80},
+  {'score': 100, 'overtime': true, 'special_guest': null}
+];
+
+var jsonText = jsonEncode(scores);
+assert(jsonText ==
+    '[{"score":40},{"score":80},'
+        '{"score":100,"overtime":true,'
+        '"special_guest":null}]');
+
+//使用 utf8.decode() 解码 UTF8 编码的字符创为 Dart 字符串：
+List<int> utf8Bytes = [
+  0xc3, 0x8e, 0xc3, 0xb1, 0xc5, 0xa3, 0xc3, 0xa9,
+  0x72, 0xc3, 0xb1, 0xc3, 0xa5, 0xc5, 0xa3, 0xc3,
+  0xae, 0xc3, 0xb6, 0xc3, 0xb1, 0xc3, 0xa5, 0xc4,
+  0xbc, 0xc3, 0xae, 0xc5, 0xbe, 0xc3, 0xa5, 0xc5,
+  0xa3, 0xc3, 0xae, 0xe1, 0xbb, 0x9d, 0xc3, 0xb1
+];
+
+var funnyWord = utf8.decode(utf8Bytes);
+
+assert(funnyWord == 'Îñţérñåţîöñåļîžåţîờñ');
+
+//将 UTF-8 字符串流转换为 Dart 字符串，为 Stream 的 transform() 方法上指定 utf8.decoder：
+var lines = utf8.decoder.bind(inputStream).transform(const LineSplitter());
+try {
+  await for (final line in lines) {
+    print('Got ${line.length} characters from stream');
+  }
+  print('file is now closed');
+} catch (e) {
+  print(e);
+}
+
+//使用 utf8.encode() 将 Dart 字符串编码为一个 UTF8 编码的字节流：
+List<int> encoded = utf8.encode('Îñţérñåţîöñåļîžåţîờñ');
+
+assert(encoded.length == utf8Bytes.length);
+for (int i = 0; i < encoded.length; i++) {
+  assert(encoded[i] == utf8Bytes[i]);
+}
+}
 // 基于浏览器应用（https://dart.cn/guides/libraries/library-tour#darthtml）
 // TODO: 暂缓
 
@@ -421,12 +540,17 @@ void math_and_random() {
 
 void main(List<String> args) {
   // 数字、集合、字符串等
+        print("数字、集合、字符串：");
   dartcore_numbers_numbers_collections_strings_and_more();
 
-  // 集合111
+  // 集合
+      print("\n集合：");
   collections();
-
+  //URIS
+    print("\nURIS：");
+  URIs();
   // 时间和日期
+      print("\n时间和日期：");
   dates_and_times();
 
   // 数学和随机数
