@@ -1,6 +1,6 @@
 // Importing core libraries
 import 'dart:math';
-import'dart:io';
+import 'dart:io';
 
 //变量 https://dart.cn/samples#variables
 void variables() {
@@ -16,7 +16,7 @@ void variables() {
       'name is $name, year is $year, antennaDiameter is $antennaDiameter, flybyObjects is $flybyObjects, image is $image');
 
   flow_control(year, flybyObjects); //流程控制
-    print("\n");
+  print("\n");
   flybyObjects.where((name) => name.contains('turn')).forEach(print); //匿名函数
 }
 
@@ -28,11 +28,11 @@ void flow_control(var year, var flybyObjects) {
     print('20th century');
   }
   for (final object in flybyObjects) {
-   stdout.wirte("${object}  ");
+    stdout.write("${object}  ");
   }
   print("\n");
   for (int month = 1; month <= 12; month++) {
-       stdout.wirte("${month}  ");
+    stdout.write("${month}  ");
   }
   while (year < 2016) {
     year++;
@@ -78,12 +78,31 @@ class Orbiter extends Spacecraft {
       : super(name, launchDate);
 }
 
+//Mixins https://dart.cn/samples#mixins
+mixin Piloted {
+  int astronauts = 1;
+
+  void describeCrew() {
+    print('Number of astronauts: $astronauts');
+  }
+}
+
+class PilotedCraft extends Spacecraft with Piloted {
+  PilotedCraft(String name, DateTime launchDate) : super(name, launchDate);
+}
+
 void main(List<String> args) {
-  //variables(); //变量
-  //print(fibonacci(20)); //函数,斐波那契函数
+  variables(); //变量
+  print(fibonacci(20)); //函数,斐波那契函数
+  print("类：")
   var voyager = Spacecraft('Voyager I', DateTime(1977, 9, 5));
   voyager.describe();
+  var voyage2 = Spacecraft.unlaunched('Voyager III');
+  voyage2.describe();
 
-  var voyager3 = Spacecraft.unlaunched('Voyager III');
+  var voyager3 = Orbiter('Voyager III', DateTime(1980, 10, 12), 3);
   voyager3.describe();
+  var voyager4 = PilotedCraft('Voyager Ⅳ', DateTime(1985, 5, 14));
+  voyager4.describe();
+  voyager4.describeCrew();
 }
