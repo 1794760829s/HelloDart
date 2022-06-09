@@ -1,5 +1,6 @@
 // Importing core libraries
 import 'dart:math';
+import'dart:io';
 
 //变量 https://dart.cn/samples#variables
 void variables() {
@@ -15,6 +16,7 @@ void variables() {
       'name is $name, year is $year, antennaDiameter is $antennaDiameter, flybyObjects is $flybyObjects, image is $image');
 
   flow_control(year, flybyObjects); //流程控制
+    print("\n");
   flybyObjects.where((name) => name.contains('turn')).forEach(print); //匿名函数
 }
 
@@ -26,10 +28,11 @@ void flow_control(var year, var flybyObjects) {
     print('20th century');
   }
   for (final object in flybyObjects) {
-    print(object);
+   stdout.wirte("${object}  ");
   }
+  print("\n");
   for (int month = 1; month <= 12; month++) {
-    print(month);
+       stdout.wirte("${month}  ");
   }
   while (year < 2016) {
     year++;
