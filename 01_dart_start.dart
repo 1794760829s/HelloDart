@@ -118,7 +118,7 @@ class Des implements Describable {
 Future<void> createDescriptions(Iterable<String> objects) async {
   for (final object in objects) {
     try {
-      var file = File('$object.txt');
+      var file = new File('$object.txt');
       if (await file.exists()) {
         var modified = await file.lastModified();
         print('File for $object already exists. It was modified on $modified.');
@@ -150,6 +150,6 @@ void main(List<String> args) {
   voyager4.describeCrew();
 
   Des().describeWithEmphasis();
-  Iterable<String> test=['01_test'];
+  Iterable<String> test = ['01_test'];
   createDescriptions(test);
 }

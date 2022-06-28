@@ -1,5 +1,9 @@
 import 'dart:math';
 import 'dart:convert';
+import 'dart:html';
+import 'dart:math';
+import 'dart:io' as IO;
+
 // 数字、集合、字符串等（https://dart.cn/guides/libraries/library-tour#dartcore---numbers-collections-strings-and-more）
 void dartcore_numbers_numbers_collections_strings_and_more() {
   assert(int.parse('42') == 42);
@@ -304,7 +308,6 @@ void collections() {
 
 // URIs (https://dart.cn/guides/libraries/library-tour#uris)
 void URIs() {
-
   var uri = 'https://example.org/api?foo=some message';
 
   var encoded = Uri.encodeFull(uri);
@@ -388,6 +391,7 @@ class Line implements Comparable<Line> {
   @override
   int compareTo(Line other) => length - other.length;
 }
+
 //Implementing map keys
 class Person {
   final String firstName, lastName;
@@ -408,30 +412,16 @@ class Person {
         other.lastName == lastName;
   }
 }
-//迭代
-class Process {
-  // Represents a process...
-}
-
-class ProcessIterator implements Iterator<Process> {
-  @override
-  Process get current => ...
-  @override
-  bool moveNext() => ...
-}
-
-// A mythical class that lets you iterate through all
-// processes. Extends a subclass of [Iterable].
-class Processes extends IterableBase<Process> {
-  @override
-  final Iterator<Process> iterator = ProcessIterator();
-}
 
 // 异常 (https://dart.cn/guides/libraries/library-tour#exceptions)
-// TODO: 暂缓
+class FooException implements Exception {
+  final String? msg;
 
-// 异步编程 (https://dart.cn/guides/libraries/library-tour#dartasync---asynchronous-programming)
-// TODO: 暂缓
+  const FooException([this.msg]);
+
+  @override
+  String toString() => msg ?? 'FooException';
+}
 
 // 数学和随机数 （https://dart.cn/guides/libraries/library-tour#dartmath---math-and-random）
 void math_and_random() {
@@ -469,92 +459,165 @@ void math_and_random() {
 }
 
 // 编解码JSON，UTF-8等 (https://dart.cn/guides/libraries/library-tour#dartconvert---decoding-and-encoding-json-utf-8-and-more)
-// TODO: 自学
-void Encoding_decoding(){
+void Encoding_decoding() {
 //使用 jsonDecode() 解码 JSON 编码的字符串为 Dart 对象：
 // NOTE: Be sure to use double quotes ("),
 // not single quotes ('), inside the JSON string.
 // This string is JSON, not Dart.
-var jsonString = '''
-  [
+  var jsonString = ''' [
     {"score": 40},
     {"score": 80}
   ]
 ''';
-var scores = jsonDecode(jsonString);
-assert(scores is List);
-var firstScore = scores[0];
-assert(firstScore is Map);
-assert(firstScore['score'] == 40);
-
+  var scores = jsonDecode(jsonString); //jsonDecode() 解码 JSON 编码的字符串为 Dart 对象
+  assert(scores is List); //scores为列表
+  var firstScore = scores[0];
+  assert(firstScore is Map); //firstScore为哈希表
+  assert(firstScore['score'] == 40); //'score'对应为40
+  firstScore = scores[1];
+  assert(firstScore['score'] == 80); //'score'对应为80
 //使用 jsonEncode() 编码 Dart 对象为 JSON 格式的字符串：
-scores = [
-  {'score': 40},
-  {'score': 80},
-  {'score': 100, 'overtime': true, 'special_guest': null}
-];
+  scores = [
+    //scores为表
+    {'score': 40},
+    {'score': 80},
+    {'score': 100, 'overtime': true, 'special_guest': null}
+  ];
 
-var jsonText = jsonEncode(scores);
-assert(jsonText ==
-    '[{"score":40},{"score":80},'
-        '{"score":100,"overtime":true,'
-        '"special_guest":null}]');
+  var jsonText = jsonEncode(scores); //将scores转化为字符串存入jsonText
+  assert(jsonText ==
+      '[{"score":40},{"score":80},'
+          '{"score":100,"overtime":true,'
+          '"special_guest":null}]'); //jsonText为字符串
 
 //使用 utf8.decode() 解码 UTF8 编码的字符创为 Dart 字符串：
-List<int> utf8Bytes = [
-  0xc3, 0x8e, 0xc3, 0xb1, 0xc5, 0xa3, 0xc3, 0xa9,
-  0x72, 0xc3, 0xb1, 0xc3, 0xa5, 0xc5, 0xa3, 0xc3,
-  0xae, 0xc3, 0xb6, 0xc3, 0xb1, 0xc3, 0xa5, 0xc4,
-  0xbc, 0xc3, 0xae, 0xc5, 0xbe, 0xc3, 0xa5, 0xc5,
-  0xa3, 0xc3, 0xae, 0xe1, 0xbb, 0x9d, 0xc3, 0xb1
-];
+  List<int> utf8Bytes = [
+    0xc3,
+    0x8e,
+    0xc3,
+    0xb1,
+    0xc5,
+    0xa3,
+    0xc3,
+    0xa9,
+    0x72,
+    0xc3,
+    0xb1,
+    0xc3,
+    0xa5,
+    0xc5,
+    0xa3,
+    0xc3,
+    0xae,
+    0xc3,
+    0xb6,
+    0xc3,
+    0xb1,
+    0xc3,
+    0xa5,
+    0xc4,
+    0xbc,
+    0xc3,
+    0xae,
+    0xc5,
+    0xbe,
+    0xc3,
+    0xa5,
+    0xc5,
+    0xa3,
+    0xc3,
+    0xae,
+    0xe1,
+    0xbb,
+    0x9d,
+    0xc3,
+    0xb1
+  ];
 
-var funnyWord = utf8.decode(utf8Bytes);
+  var funnyWord = utf8.decode(utf8Bytes);
 
-assert(funnyWord == 'Îñţérñåţîöñåļîžåţîờñ');
-
-//将 UTF-8 字符串流转换为 Dart 字符串，为 Stream 的 transform() 方法上指定 utf8.decoder：
-var lines = utf8.decoder.bind(inputStream).transform(const LineSplitter());
-try {
-  await for (final line in lines) {
-    print('Got ${line.length} characters from stream');
-  }
-  print('file is now closed');
-} catch (e) {
-  print(e);
-}
+  assert(funnyWord == 'Îñţérñåţîöñåļîžåţîờñ');
 
 //使用 utf8.encode() 将 Dart 字符串编码为一个 UTF8 编码的字节流：
-List<int> encoded = utf8.encode('Îñţérñåţîöñåļîžåţîờñ');
+  List<int> encoded = utf8.encode('Îñţérñåţîöñåļîžåţîờñ');
 
-assert(encoded.length == utf8Bytes.length);
-for (int i = 0; i < encoded.length; i++) {
-  assert(encoded[i] == utf8Bytes[i]);
+  assert(encoded.length == utf8Bytes.length);
+  for (int i = 0; i < encoded.length; i++) {
+    assert(encoded[i] == utf8Bytes[i]);
+  }
 }
-}
+
+/* 
 // 基于浏览器应用（https://dart.cn/guides/libraries/library-tour#darthtml）
-// TODO: 暂缓
+void html_apply() {
+// Find an element by id (an-id).
+  Element idElement = querySelector('#an-id')!;
 
+// Find an element by class (a-class).
+  Element classElement = querySelector('.a-class')!;
+
+// Find all elements by tag (<div>).
+  List<Element> divElements = querySelectorAll('div');
+
+// Find all text inputs.
+  List<Element> textInputElements = querySelectorAll(
+    'input[type="text"]',
+  );
+
+// Find all elements with the CSS class 'class'inside of a <p> that is inside an element with the ID 'id'.
+  List<Element> specialParagraphElements = querySelectorAll('#id p.class');
+
+<elem1 id="example" href="/another/example">link text</a>
+
+var anchor = querySelector('#example') as AnchorElement;
+anchor.href = 'https://dart.dev';
+
+// In Dart:
+  const osList = ['macos', 'windows', 'linux'];
+  final userOs = determineUserOs();
+
+// For each possible OS...
+  for (final os in osList) {
+    // Matches user OS?
+    bool shouldShow = (os == userOs);
+
+    for (final elem in querySelectorAll('.$os')) {
+      elem.hidden = !shouldShow; // Show or hide.
+    }
+  }
+
+}
+*/
 // 服务器和命令行应用程序的 I/O（https://dart.cn/guides/libraries/library-tour#dartio）
-// TODO: 自学，下周详细讲
+void IO_example() async {
+  var config = IO.File('02_test.txt');
+  // Put the whole file in a single string.
+  var stringContents = await config.readAsString();
+  print('The file is ${stringContents.length} characters long.');
+
+  // Put each line of the file into its own string.
+  var lines = await config.readAsLines();
+  print('The file is ${lines.length} lines long.');
+}
 
 void main(List<String> args) {
   // 数字、集合、字符串等
-        print("数字、集合、字符串：");
+  print("数字、集合、字符串：");
   dartcore_numbers_numbers_collections_strings_and_more();
 
   // 集合
-      print("\n集合：");
+  print("\n集合：");
   collections();
   //URIS
-    print("\nURIS：");
+  print("\nURIS：");
   URIs();
   // 时间和日期
-      print("\n时间和日期：");
+  print("\n时间和日期：");
   dates_and_times();
 
   // 数学和随机数
   math_and_random();
-
+  print("\nIO：");
+  IO_example();
   print('done.');
 }
