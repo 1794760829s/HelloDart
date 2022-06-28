@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'dart:convert';
-import 'dart:html';
 import 'dart:math';
 import 'dart:io' as IO;
 
@@ -547,47 +546,6 @@ void Encoding_decoding() {
   }
 }
 
-/* 
-// 基于浏览器应用（https://dart.cn/guides/libraries/library-tour#darthtml）
-void html_apply() {
-// Find an element by id (an-id).
-  Element idElement = querySelector('#an-id')!;
-
-// Find an element by class (a-class).
-  Element classElement = querySelector('.a-class')!;
-
-// Find all elements by tag (<div>).
-  List<Element> divElements = querySelectorAll('div');
-
-// Find all text inputs.
-  List<Element> textInputElements = querySelectorAll(
-    'input[type="text"]',
-  );
-
-// Find all elements with the CSS class 'class'inside of a <p> that is inside an element with the ID 'id'.
-  List<Element> specialParagraphElements = querySelectorAll('#id p.class');
-
-<elem1 id="example" href="/another/example">link text</a>
-
-var anchor = querySelector('#example') as AnchorElement;
-anchor.href = 'https://dart.dev';
-
-// In Dart:
-  const osList = ['macos', 'windows', 'linux'];
-  final userOs = determineUserOs();
-
-// For each possible OS...
-  for (final os in osList) {
-    // Matches user OS?
-    bool shouldShow = (os == userOs);
-
-    for (final elem in querySelectorAll('.$os')) {
-      elem.hidden = !shouldShow; // Show or hide.
-    }
-  }
-
-}
-*/
 // 服务器和命令行应用程序的 I/O（https://dart.cn/guides/libraries/library-tour#dartio）
 void IO_example() async {
   var config = IO.File('02_test.txt');
